@@ -1,28 +1,55 @@
 #!/usr/bin/env python
+import cv2
+import pickle
 import numpy as np
-from keras.models import Model
-from keras.layers import Input
-from keras.layers.convolutional import Conv2D
-from keras.layers.convolutional import SeparableConv2D
-from keras.layers.pooling import MaxPooling2D
+import random
+from collections import defaultdict
+
+class DFDLoader:
+    def __init__(self, INDEX_PATH, FEATURES_PATH):
+        print "Creating Loader...",
+        with open(INDEX_PATH, "r") as f:
+            self.images_paths = f.read().splitlines()
+        with open(FEATURES_PATH, "r") as f:
+            self.features_dict = pickle.load(f)
+        self.instance_count = len(self.images_paths)
+        print "Done!"
+
+    def data_generator(self, batch, shuffle=False, net_input_dim=(224,224,3)):
+        X = np.zeros((batch, net_input_dim[0], net_input_dim[1], net_input_dim[2])).astype(np.float32)
+        Y = np.zeros((batch, 7605)).astype(np.float32)
+
+        batch_index = 0
+        instances_index = 0
+        while True:
+            im_data = cv2.imread(self.images_paths[instances_index])            
+
+            im_key  = self.images_paths[instances_index].split("/")[-1][:-4]
+            im_data = cv2.resize(im_data, (net_input_dim[0], net_input_dim[1])).astype(np.float32)
+            im_data /= 255.0
+            im_data = im_data[...,::-1]
+
+            batch_index += 1
+            batch_index = batch_index % batch
+            instances_index += 1
+
+            X[batch_index] = im_data
+            Y[batch_index] = self.features_dict[im_key]
+
+            if instances_index == len(self.images_paths):
+                instances_index = 0
+                if shuffle:
+                    random.shuffle(self.images_paths)
+
+            if batch_index == 0:
+                yield X, Y
 
 if __name__ == "__main__":
-    BATCH = 32
-    inputs = Input(shape=(416, 416, 3))
-    net = Conv2D(32, 3, padding="same", activation="relu")(inputs)
-    net = MaxPooling2D(pool_size=(2,2), strides=(2,2))(net)
-    net = SeparableConv2D(64, 3, padding="same", activation="relu")(net)
-    net = MaxPooling2D(pool_size=(2,2), strides=(2,2))(net)
-    net = SeparableConv2D(128, 3, padding="same", activation="relu")(net)
-    net = MaxPooling2D(pool_size=(2,2), strides=(2,2))(net)
-    net = SeparableConv2D(256, 3, padding="same", activation="relu")(net)
-    net = MaxPooling2D(pool_size=(2,2), strides=(2,2))(net)
-    net = SeparableConv2D(512, 3, padding="same", activation="relu")(net)
-    net = MaxPooling2D(pool_size=(2,2), strides=(2,2))(net)
-    net = SeparableConv2D(1024, 3, padding="same", activation="relu")(net)
-    net = Conv2D(45, 3, padding="same", activation="relu")(net)
+    list_path     = "/home/gabriel/datasets/X_Dataset_segmentation_3K_VOC/VOC2007/train.txt"
+    features_path = "/home/gabriel/python_code/yolo_depthwise/features.dat"
+    dfd = DFDLoader(list_path, features_path)
+    gen = dfd.data_generator(10, shuffle=True)
 
-    model = Model(inputs, net)
-    model.compile(optimizer="sgd", loss="mse")
-    model.summary()
-    print "ok!"
+    for i in range(1000):
+        data = gen.next()
+        print data[0].mean(), data[1].min(), data[1].max()
