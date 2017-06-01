@@ -52,4 +52,4 @@ if __name__ == "__main__":
 
     for i in range(1000):
         data = gen.next()
-        print data[0].mean(), data[1].min(), data[1].max()
+        print "M:", data[0].mean(), "S:", data[0].std(), data[1].min(), data[1].max(), data[0].shape, data[1].shape
