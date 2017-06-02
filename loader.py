@@ -50,8 +50,10 @@ class DFDLoader:
 
         batch_index = 0
         instances_index = 0
+        files_names = []
         while True:
             im_data = cv2.imread(self.images_paths[instances_index])            
+            files_names += [self.images_paths[instances_index].split("/")[-1][:-4]]
 
             im_key  = self.images_paths[instances_index].split("/")[-1][:-4]
             im_data = cv2.resize(im_data, (net_input_dim[0], net_input_dim[1])).astype(np.float32)
@@ -68,7 +70,8 @@ class DFDLoader:
                 instances_index = 0                
 
             if batch_index == 0:
-                yield X
+                yield X, files_names
+                files_names = []
 
 if __name__ == "__main__":
     list_path     = "/home/gabriel/datasets/X_Dataset_segmentation_3K_VOC/VOC2007/train.txt"
@@ -79,4 +82,5 @@ if __name__ == "__main__":
     gen = dfd.test_data_generator(10)
 
     for i in range(1000):
-        print "M:", gen.shape
+        data = gen.next()
+        print data[1]

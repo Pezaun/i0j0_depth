@@ -24,7 +24,7 @@ if __name__ == "__main__":
     model.summary()
 
     train_list_path = "/home/gabriel/datasets/X_Dataset_segmentation_3K_VOC/VOC2007/train.txt"
-    valid_list_path = "/home/gabriel/datasets/X_Dataset_segmentation_3K_VOC/VOC2007/train.txt"
+    valid_list_path = "/home/gabriel/datasets/X_Dataset_segmentation_3K_VOC/VOC2007/valid.txt"
     features_path   = "/home/gabriel/python_code/yolo_depthwise/features.dat"
 
     MODEL_PATH     = "/home/gabriel/python_code/yolo_depthwise/models_separable_adam/weights.{epoch:02d}-{val_loss:.8f}.hdf5"

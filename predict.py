@@ -24,7 +24,7 @@ if __name__ == "__main__":
     model = nets.yolo_separable_net()
     model.summary()
     print "Loading..."
-    model.load_weights("/home/gabriel/python_code/yolo_depthwise/models/weights.15-2.15037974.hdf5")
+    model.load_weights("/home/gabriel/python_code/yolo_depthwise/models_separable_adam/weights.15-2.15037974.hdf5")
     # print "Compiling..."
     # model.compile()
     print "Loading Data..."
@@ -38,10 +38,11 @@ if __name__ == "__main__":
     results = []
     print "Predicting..."
     for i in range(300):
-        print i,
-        result = model.predict_on_batch(data_test.next())
-        results += [result[0]]
-        results += [result[1]]
+        print i
+        data = data_test.next()
+        result = model.predict_on_batch(data[0])
+        results += [(data[1][0],result[0])]
+        results += [(data[1][1],result[1])]
     with open("/home/gabriel/python_code/yolo_depthwise/preds.dat", "w") as f:
         pickle.dump(results, f)
 

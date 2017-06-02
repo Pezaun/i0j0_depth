@@ -6,15 +6,11 @@ __pycache__/
 # C extensions
 *.so
 
-logs/
-logs_separable_adam/
-models_separable_adam/
-models_t1_conv_yolo/
 models*
+logs*
 preds.dat
-
-features.dat
-train_log_sep_adam.txt
+features/
+logs*
 
 # Distribution / packaging
 .Python
