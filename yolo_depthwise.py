@@ -30,8 +30,8 @@ if __name__ == "__main__":
     valid_list_path = "/home/gabriel/datasets/X_Dataset_segmentation_3K_VOC/VOC2007/valid.txt"
     features_path   = "/home/gabriel/python_code/yolo_depthwise/features/features.dat"
 
-    MODEL_PATH     = "/home/gabriel/python_code/yolo_depthwise/models/weights.{epoch:02d}-{val_loss:.8f}.hdf5"
-    LOG_PATH       = "/home/gabriel/python_code/yolo_depthwise/logs/training.log"
+    MODEL_PATH     = "/home/gabriel/python_code/yolo_depthwise/models_6dec/weights.{epoch:02d}-{val_loss:.8f}.hdf5"
+    LOG_PATH       = "/home/gabriel/python_code/yolo_depthwise/logs_6dec/training.log"
 
     dfd_train = DFDLoader(train_list_path, features_path)
     dfd_valid = DFDLoader(valid_list_path, features_path)

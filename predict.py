@@ -22,15 +22,13 @@ config.gpu_options.allow_growth = True
 session = tf.Session(config=config)
 
 if __name__ == "__main__":
-    model = nets.yolo_separable_net()
+    model = nets.yolo_convolutional_net()
     
     model.summary()
     print "Loading..."
-    model.load_weights("/home/gabriel/python_code/yolo_depthwise/models_t1_conv_yolo/weights.61-2.06479477.hdf5")
+    model.load_weights("/home/gabriel/python_code/yolo_depthwise/models/weights.39-2.05692211.hdf5")
     print "Loading Data..."
     test_list_path = "/home/gabriel/datasets/X_Dataset_segmentation_3K_VOC/VOC2007/test.txt"
-    MODEL_PATH     = "/home/gabriel/python_code/yolo_depthwise/models/weights.15-2.15037974.hdf5"
-
 
     dfd_test = DFDLoader(test_list_path)
     
