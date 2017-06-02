@@ -10,6 +10,8 @@ logs/
 logs_separable_adam/
 models_separable_adam/
 models_t1_conv_yolo/
+models*
+preds.dat
 
 features.dat
 train_log_sep_adam.txt
