@@ -20,15 +20,18 @@ config.gpu_options.allow_growth = True
 session = tf.Session(config=config)
 
 if __name__ == "__main__":
-    model = nets.yolo_separable_net()
+    model = nets.yolo_convolutional_net()
+    opt = Adam(lr=1e-3)
+    # opt = SGD(lr=1e-3, momentum=0.9, decay=5e-4, nesterov=False)
+    model.compile(optimizer=opt, loss="mse")
     model.summary()
 
     train_list_path = "/home/gabriel/datasets/X_Dataset_segmentation_3K_VOC/VOC2007/train.txt"
     valid_list_path = "/home/gabriel/datasets/X_Dataset_segmentation_3K_VOC/VOC2007/valid.txt"
-    features_path   = "/home/gabriel/python_code/yolo_depthwise/features.dat"
+    features_path   = "/home/gabriel/python_code/yolo_depthwise/features/features.dat"
 
-    MODEL_PATH     = "/home/gabriel/python_code/yolo_depthwise/models_separable_adam/weights.{epoch:02d}-{val_loss:.8f}.hdf5"
-    LOG_PATH       = "/home/gabriel/python_code/yolo_depthwise/logs_separable_adam/training.log"
+    MODEL_PATH     = "/home/gabriel/python_code/yolo_depthwise/models/weights.{epoch:02d}-{val_loss:.8f}.hdf5"
+    LOG_PATH       = "/home/gabriel/python_code/yolo_depthwise/logs/training.log"
 
     dfd_train = DFDLoader(train_list_path, features_path)
     dfd_valid = DFDLoader(valid_list_path, features_path)

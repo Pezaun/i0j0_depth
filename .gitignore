@@ -11,6 +11,7 @@ logs*
 preds.dat
 features/
 logs*
+preds*
 
 # Distribution / packaging
 .Python

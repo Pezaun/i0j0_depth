@@ -119,7 +119,7 @@ def yolo_separable_net():
     model = Model(inputs, net)
     opt = Adam(lr=1e-3)
     # opt = SGD(lr=1e-3, momentum=0.9, decay=5e-4, nesterov=False)
-    model.compile(optimizer=opt, loss="mse")
+    # model.compile(optimizer=opt, loss="mse")
     return model
 
 def yolo_convolutional_net():
@@ -229,7 +229,5 @@ def yolo_convolutional_net():
     net = Flatten()(net)
 
     model = Model(inputs, net)
-    # opt = Adam(lr=1e-3)
-    opt = SGD(lr=1e-3, momentum=0.9, decay=5e-4, nesterov=False)
-    model.compile(optimizer=opt, loss="mse")
+    
     return model

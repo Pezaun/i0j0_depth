@@ -14,6 +14,7 @@ from keras.optimizers import Adadelta, SGD, Adam
 from loader import DFDLoader
 import nets
 import pickle
+from collections import defaultdict
 
 # Workaround for not using all GPU memory
 config = tf.ConfigProto()
@@ -22,11 +23,10 @@ session = tf.Session(config=config)
 
 if __name__ == "__main__":
     model = nets.yolo_separable_net()
+    
     model.summary()
     print "Loading..."
-    model.load_weights("/home/gabriel/python_code/yolo_depthwise/models_separable_adam/weights.15-2.15037974.hdf5")
-    # print "Compiling..."
-    # model.compile()
+    model.load_weights("/home/gabriel/python_code/yolo_depthwise/models_t1_conv_yolo/weights.61-2.06479477.hdf5")
     print "Loading Data..."
     test_list_path = "/home/gabriel/datasets/X_Dataset_segmentation_3K_VOC/VOC2007/test.txt"
     MODEL_PATH     = "/home/gabriel/python_code/yolo_depthwise/models/weights.15-2.15037974.hdf5"
@@ -35,14 +35,13 @@ if __name__ == "__main__":
     dfd_test = DFDLoader(test_list_path)
     
     data_test = dfd_test.test_data_generator(2, net_input_dim=(416, 416, 3))
-    results = []
+    results = defaultdict()
     print "Predicting..."
     for i in range(300):
         print i
         data = data_test.next()
         result = model.predict_on_batch(data[0])
-        results += [(data[1][0],result[0])]
-        results += [(data[1][1],result[1])]
+        for i in range(result.shape[0]):
+            results[data[1][i]] = result[i]
     with open("/home/gabriel/python_code/yolo_depthwise/preds.dat", "w") as f:
         pickle.dump(results, f)
-
