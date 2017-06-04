@@ -23,7 +23,8 @@ class DFDLoader:
         batch_index = 0
         instances_index = 0
         while True:
-            im_data = cv2.imread(self.images_paths[instances_index])            
+            im_data = cv2.imread(self.images_paths[instances_index])
+            im_key = self.images_paths[instances_index].split("/")[-1][:-4]
 
             im_data = self.letter_image(im_data, net_input_dim).astype(np.float32)
             im_data /= 255.0
@@ -91,12 +92,12 @@ class DFDLoader:
 
 if __name__ == "__main__":
     list_path     = "/home/gabriel/datasets/X_Dataset_segmentation_3K_VOC/VOC2007/train.txt"
-    # features_path = "/home/gabriel/python_code/yolo_depthwise/features.dat"
-    # dfd = DFDLoader(list_path, features_path)
-    dfd = DFDLoader(list_path)
+    features_path = "/home/gabriel/python_code/yolo_depthwise/features/features.dat"
+    dfd = DFDLoader(list_path, features_path)
+    # dfd = DFDLoader(list_path)
     gen = dfd.data_generator(10, shuffle=True, net_input_dim=(416, 416, 3))
     # gen = dfd.test_data_generator(10)
 
     for i in range(1000):
         data = gen.next()
-        # print data[1]
+        print data[0].shape, data[1].shape, data[0].mean()
